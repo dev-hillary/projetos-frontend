@@ -9,7 +9,7 @@ Coleção de aplicações e projetos web desenvolvidos durante meus estudos de F
 | Projeto | Descrição | Tecnologias | Link do Site |
 | :--- | :--- | :--- | :--- |
 | **Calculadora** | Calculadora interativa com suporte a teclado e tema escuro. | HTML, CSS, JS | [🔗 Testar Aplicação](https://dev-hillary.github.io/projetos-frontend/calculadora/) |
-| **To-Do List** | Lista de tarefas interativa com armazenamento local e filtros. | HTML, CSS, JS | ⏳ *Em breve* |
+| **To-Do List** | Lista de tarefas interativa com armazenamento local e filtros. | HTML, CSS, JS | [🔗 Testar Aplicação](https://dev-hillary.github.io/projetos-frontend/to-do%20list/) |
 
 ---
 
