@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gerenciador de tarefas moderno, acessível e funcional construído com HTML5, CSS3 e JavaScript.">
+  <title>TaskFlow | Gerenciador de Tarefas</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Cabeçalho Principal -->
+  <header class="header">
+    <div class="header__container container">
+      <div class="header__brand">
+        <h1 class="header__title">TaskFlow</h1>
+        <span class="header__badge">ADS Studio</span>
+      </div>
+      
+      <button id="themeToggleBtn" class="theme-toggle" aria-label="Alternar tema entre claro e escuro">
+        <span class="theme-toggle__icon" id="themeIcon" aria-hidden="true">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main container">
+    
+    <!-- Painel de Estatísticas / Dashboard -->
+    <section class="dashboard" aria-label="Estatísticas de Produtividade">
+      <div class="dashboard__grid">
+        <article class="stat-card">
+          <span class="stat-card__title">Total</span>
+          <strong id="statTotal" class="stat-card__value">0</strong>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-card__title">Pendentes</span>
+          <strong id="statPending" class="stat-card__value stat-card__value--warning">0</strong>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-card__title">Concluídas</span>
+          <strong id="statCompleted" class="stat-card__value stat-card__value--success">0</strong>
+        </article>
+      </div>
+
+      <!-- Barra de Progresso -->
+      <div class="progress">
+        <div class="progress__info">
+          <span class="progress__label">Progresso Geral</span>
+          <span id="progressPercentage" class="progress__percentage">0%</span>
+        </div>
+        <div class="progress__bar-bg" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progressBarContainer">
+          <div id="progressBarFill" class="progress__bar-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulário de Criação de Tarefas -->
+    <section class="card" aria-labelledby="formTitle">
+      <h2 id="formTitle" class="sr-only">Nova Tarefa</h2>
+      <form id="taskForm" class="task-form" novalidate>
+        <div class="task-form__main">
+          <input 
+            type="text" 
+            id="taskTitle" 
+            class="form-control" 
+            placeholder="O que precisa ser feito hoje?" 
+            required 
+            aria-required="true"
+            aria-describedby="taskInputError"
+          >
+          <button type="submit" class="btn btn--primary">Adicionar</button>
+        </div>
+        <span id="taskInputError" class="form-error" aria-live="polite"></span>
+
+        <div class="task-form__options">
+          <div class="form-group">
+            <label for="taskPriority" class="form-label">Prioridade</label>
+            <select id="taskPriority" class="form-control form-control--sm">
+              <option value="baixa">Baixa</option>
+              <option value="media" selected>Média</option>
+              <option value="alta">Alta</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="taskCategory" class="form-label">Categoria</label>
+            <select id="taskCategory" class="form-control form-control--sm">
+              <option value="Estudos">Estudos</option>
+              <option value="Trabalho">Trabalho</option>
+              <option value="Pessoal">Pessoal</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="taskDueDate" class="form-label">Data Limite</label>
+            <input type="date" id="taskDueDate" class="form-control form-control--sm">
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Controles de Busca, Filtro e Ordenação -->
+    <section class="controls-bar" aria-label="Filtros e busca de tarefas">
+      <div class="search-box">
+        <input 
+          type="search" 
+          id="searchInput" 
+          class="form-control" 
+          placeholder="Buscar tarefas..." 
+          aria-label="Buscar tarefas por texto"
+        >
+      </div>
+
+      <div class="filters">
+        <div class="filter-group" role="group" aria-label="Filtrar por status">
+          <button type="button" class="btn-filter btn-filter--active" data-filter="all">Todas</button>
+          <button type="button" class="btn-filter" data-filter="pending">Pendentes</button>
+          <button type="button" class="btn-filter" data-filter="completed">Concluídas</button>
+        </div>
+
+        <select id="sortSelect" class="form-control form-control--sm" aria-label="Ordenar tarefas">
+          <option value="created-desc">Mais recentes</option>
+          <option value="created-asc">Mais antigas</option>
+          <option value="priority-desc">Maior prioridade</option>
+          <option value="priority-asc">Menor prioridade</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Lista de Tarefas -->
+    <section class="tasks-section" aria-label="Lista de tarefas">
+      <ul id="taskList" class="task-list" aria-live="polite"></ul>
+
+      <!-- Estado Vazio (Empty State) -->
+      <div id="emptyState" class="empty-state hidden">
+        <div class="empty-state__icon" aria-hidden="true">📋</div>
+        <h3 class="empty-state__title">Nenhuma tarefa encontrada</h3>
+        <p class="empty-state__description">Adicione uma nova tarefa acima ou ajuste os filtros selecionados.</p>
+      </div>
+
+      <!-- Ações em Lote -->
+      <div class="tasks-actions">
+        <button type="button" id="clearCompletedBtn" class="btn btn--outline-danger">
+          Limpar Concluídas
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal de Edição -->
+  <div id="editModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="modal__overlay" id="modalOverlay"></div>
+    <div class="modal__content card">
+      <header class="modal__header">
+        <h2 id="editModalTitle" class="modal__title">Editar Tarefa</h2>
+        <button type="button" class="modal__close" id="closeModalBtn" aria-label="Fechar modal">&times;</button>
+      </header>
+      
+      <form id="editTaskForm" class="task-form">
+        <input type="hidden" id="editTaskId">
+        
+        <div class="form-group">
+          <label for="editTaskTitle" class="form-label">Descrição</label>
+          <input type="text" id="editTaskTitle" class="form-control" required>
+        </div>
+
+        <div class="task-form__options">
+          <div class="form-group">
+            <label for="editTaskPriority" class="form-label">Prioridade</label>
+            <select id="editTaskPriority" class="form-control">
+              <option value="baixa">Baixa</option>
+              <option value="media">Média</option>
+              <option value="alta">Alta</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="editTaskCategory" class="form-label">Categoria</label>
+            <select id="editTaskCategory" class="form-control">
+              <option value="Estudos">Estudos</option>
+              <option value="Trabalho">Trabalho</option>
+              <option value="Pessoal">Pessoal</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="editTaskDueDate" class="form-label">Data Limite</label>
+            <input type="date" id="editTaskDueDate" class="form-control">
+          </div>
+        </div>
+
+        <div class="modal__actions">
+          <button type="button" class="btn btn--secondary" id="cancelEditBtn">Cancelar</button>
+          <button type="submit" class="btn btn--primary">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Container de Notificações Toast -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
