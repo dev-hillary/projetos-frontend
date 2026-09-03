@@ -1,0 +1,169 @@
+/* --- RESET & VARIÁVEIS DE DESIGN --- */
+:root {
+    --bg-main: #0f172a;           /* Escuro elegante (Slate 900) */
+    --calc-bg: #1e293b;          /* Fundo do corpo da calculadora */
+    --display-bg: #090d16;       /* Fundo da tela de resultados */
+    --text-primary: #f8fafc;     /* Texto principal branco */
+    --text-secondary: #94a3b8;   /* Texto secundário acinzentado */
+    
+    --btn-number-bg: #334155;    /* Botões numéricos */
+    --btn-number-hover: #475569;
+    
+    --btn-action-bg: #ef4444;    /* Botões de ação (Clear / Delete) */
+    --btn-action-hover: #dc2626;
+    
+    --btn-operator-bg: #8b5cf6;  /* Botões de operadores (Roxo/Lilás) */
+    --btn-operator-hover: #7c3aed;
+    
+    --btn-equals-bg: #38bdf8;    /* Botão de Igual (Azul neon) */
+    --btn-equals-hover: #0284c7;
+    
+    --font-family: 'Inter', sans-serif;
+    --border-radius: 16px;
+    --btn-radius: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-main);
+    font-family: var(--font-family);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+/* --- ESTRUTURA DA CALCULADORA --- */
+.calculator-container {
+    background-color: var(--calc-bg);
+    width: 100%;
+    max-width: 360px;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* --- TELA / DISPLAY --- */
+.display {
+    background-color: var(--display-bg);
+    border-radius: var(--btn-radius);
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.25rem;
+    text-align: right;
+    word-wrap: break-word;
+    word-break: break-all;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.previous-operand {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    min-height: 1.2rem;
+}
+
+.current-operand {
+    color: var(--text-primary);
+    font-size: 2.25rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* --- TECLADO GRID --- */
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+}
+
+/* --- ESTILIZAÇÃO DOS BOTÕES --- */
+.btn {
+    border: none;
+    outline: none;
+    padding: 1.1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-family: var(--font-family);
+    border-radius: var(--btn-radius);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    user-select: none;
+    color: var(--text-primary);
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+/* Foco para Acessibilidade por Teclado */
+.btn:focus-visible {
+    outline: 2px solid var(--btn-equals-bg);
+    outline-offset: 2px;
+}
+
+/* Estilos Específicos */
+.btn-number {
+    background-color: var(--btn-number-bg);
+}
+.btn-number:hover {
+    background-color: var(--btn-number-hover);
+}
+
+.btn-action {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+.btn-action:hover {
+    background-color: var(--btn-action-bg);
+    color: #fff;
+}
+
+.btn-operator {
+    background-color: rgba(139, 92, 246, 0.15);
+    color: #c084fc;
+}
+.btn-operator:hover {
+    background-color: var(--btn-operator-bg);
+    color: #fff;
+}
+
+.btn-equals {
+    background-color: var(--btn-equals-bg);
+    color: #0f172a;
+    font-weight: 700;
+}
+.btn-equals:hover {
+    background-color: var(--btn-equals-hover);
+    color: #fff;
+}
+
+/* Botão 0 ocupando duas colunas */
+.span-two {
+    grid-column: span 2;
+}
+
+/* --- RESPONSIVIDADE PARA TELAS PEQUENAS --- */
+@media (max-width: 380px) {
+    .calculator-container {
+        padding: 1rem;
+    }
+    
+    .btn {
+        padding: 0.9rem;
+        font-size: 1.1rem;
+    }
+    
+    .current-operand {
+        font-size: 1.75rem;
+    }
+}
